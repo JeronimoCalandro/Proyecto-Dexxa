@@ -154,6 +154,8 @@ namespace ZombieDriveGame
 
         Touch lastTouch;
 
+        public bool mobile;
+
         void Awake()
         {
             instance = this;
@@ -424,11 +426,11 @@ namespace ZombieDriveGame
                     playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
 
                     // Rotate the car wheels as it moves forward, and turn the front wheels based on the turning direction
-                    for (index = 0; index < playerObject.wheels.Length; index++)
+                    /*for (index = 0; index < playerObject.wheels.Length; index++)
                     {
                         if (index < 2) playerObject.wheels[index].localEulerAngles = Vector3.up * turnDirection;
                         else playerObject.wheels[index].Find("Wheel").Rotate(Vector3.right * Time.deltaTime * 100, Space.Self);
-                    }
+                    }*/
                 }
             }
 			else
@@ -457,11 +459,11 @@ namespace ZombieDriveGame
                         playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
 
                         // Rotate the car wheels as it moves forward, and turn the front wheels based on the turning direction
-                        for (index = 0; index < playerObject.wheels.Length; index++)
+                        /*for (index = 0; index < playerObject.wheels.Length; index++)
                         {
                             if (index < 2) playerObject.wheels[index].localEulerAngles = Vector3.up * turnDirection;
                             else playerObject.wheels[index].Find("Wheel").Rotate(Vector3.right * Time.deltaTime * 100, Space.Self);
-                        }
+                        }*/
                         // Rotate the player to the correct angle
                         if(turn)
                             /*if ( playerObject.transform.eulerAngles.y != turnDirection ) */playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, turnDirection, Time.deltaTime * playerObject.turnSpeed);//  Vector3.RotateTowards(playerObject.transform.eulerAngles, Vector3.up * turnDirection, Time.deltaTime * playerObject.turnSpeed, 0.0F);
@@ -584,41 +586,45 @@ namespace ZombieDriveGame
             if ((isGameOver && !finishAnimation)) CenterCar();
             else if (!tutorial)
             {
-
-                /*if (Input.touchCount > 0)
+                if (mobile)
                 {
-                    lastTouch = Input.GetTouch(Input.touchCount - 1);
-                    if (lastTouch.position.x < (float)Screen.width * .5f)
+                    if (Input.touchCount > 0)
                     {
-                        if (lastTouch.phase == TouchPhase.Began || lastTouch.phase == TouchPhase.Stationary)
-                            TurnLeft();
+                        lastTouch = Input.GetTouch(Input.touchCount - 1);
+                        if (lastTouch.position.x < (float)Screen.width * .5f)
+                        {
+                            if (lastTouch.phase == TouchPhase.Began || lastTouch.phase == TouchPhase.Stationary)
+                                TurnLeft();
+                        }
+                        else if (lastTouch.position.x > (float)Screen.width * .5f)
+                            if (lastTouch.phase == TouchPhase.Began || lastTouch.phase == TouchPhase.Stationary)
+                                TurnRight();
                     }
-                    else if (lastTouch.position.x > (float)Screen.width * .5f)
-                        if (lastTouch.phase == TouchPhase.Began || lastTouch.phase == TouchPhase.Stationary)
-                            TurnRight();
-                }
-                else 
-                {
-                    turn = false;
-                    if (flipSound != 2 && flipSound != 0)
+                    else
                     {
-                        SoundController.instance.stopFxSound(SoundController.instance.carAudioSource);
-                        flipSound = 2;
+                        turn = false;
+                        if (flipSound != 2 && flipSound != 0)
+                        {
+                            SoundController.instance.stopFxSound(SoundController.instance.carAudioSource);
+                            flipSound = 2;
+                        }
                     }
-                }*/
-
-                if (Input.GetAxisRaw("Horizontal") != 0)
-                {
-                    if (Input.GetAxisRaw("Horizontal") < 0) TurnLeft();
-                    else if (Input.GetAxisRaw("Horizontal") > 0) TurnRight();
                 }
                 else
                 {
-                    turn = false;
-                    if (flipSound != 2 && flipSound != 0)
+                    if (Input.GetAxisRaw("Horizontal") != 0)
                     {
-                        SoundController.instance.stopFxSound(SoundController.instance.carAudioSource);
-                        flipSound = 2;
+                        if (Input.GetAxisRaw("Horizontal") < 0) TurnLeft();
+                        else if (Input.GetAxisRaw("Horizontal") > 0) TurnRight();
+                    }
+                    else
+                    {
+                        turn = false;
+                        if (flipSound != 2 && flipSound != 0)
+                        {
+                            SoundController.instance.stopFxSound(SoundController.instance.carAudioSource);
+                            flipSound = 2;
+                        }
                     }
                 }
             }
