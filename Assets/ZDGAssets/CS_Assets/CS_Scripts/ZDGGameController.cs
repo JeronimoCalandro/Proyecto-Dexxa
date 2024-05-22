@@ -9,9 +9,6 @@ using Bitel.PlanetaEscape.Game;
 
 namespace ZombieDriveGame
 {
-	/// <summary>
-	/// This script controls the game, starting it, following game progress, and finishing it with game over or victory.
-	/// </summary>
 	public class ZDGGameController : MonoBehaviour 
 	{
         public static ZDGGameController instance;
@@ -129,24 +126,15 @@ namespace ZombieDriveGame
         //public Transform slowMotionEffect;
 
         public Animator vanAnimator;
-        public Animator cameraAnimator;
         public Animator cuyAnimator;
         bool leftButton = true;
         public bool turn;
         int tokensCollected = 0;
-        bool spawnFuel = true;
         int totalTokensInLevel;
-        bool finishAnimation = false;
-        List<GameObject> lastObstacles = new List<GameObject>();
-        public GameObject winCanvas;
-        public GameObject loseCanvas;
-        public GameObject BombButton;
-        int prizeCont;
-        public PrizeManager prizeManager;
+
         int flipSound;
         public bool tutorial = true;
         public List<GameObject> lifesSprites = new List<GameObject>();
-        public Renderer cuyRenderer;
         public Material[] materials;
         bool spawnLife;
         public Transform lifePrefab;
@@ -203,7 +191,6 @@ namespace ZombieDriveGame
 
             // Update the number of lives we have
             ChangeHealth(0);
-            UpdateFuel();
 
             loseHealthDelayCount = 0;
 
@@ -263,12 +250,8 @@ namespace ZombieDriveGame
             // Disable multitouch so that we don't tap two answers at the same time ( prevents multi-answer cheating, thanks to Miguel Paolino for catching this bug )
             Input.multiTouchEnabled = true;
             
-            // Update the score at 0
-            //ChangeScore(0);
 
-            // Update the number of lives we have
             ChangeHealth(0);
-            UpdateFuel();
 
             loseHealthDelayCount = 0;
             
@@ -316,7 +299,6 @@ namespace ZombieDriveGame
 			// Reset the spawn delay
 			spawnGapCount = Random.Range( spawnGap.x, spawnGap.y);
 			
-			// Create the ready?GO! effect
             
 			if ( readyGoEffect && !tutorial)
             {
@@ -330,10 +312,6 @@ namespace ZombieDriveGame
             readyGo.parent = cameraObject.transform;
         }
 
-        /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
-        /// </summary>
-        /// 
 
         public void TurnRight()
         {
@@ -365,17 +343,6 @@ namespace ZombieDriveGame
             }
         }
 
-        public void ExploteObstacles()
-        {
-            foreach (var obstacle in lastObstacles)
-            {
-                if (obstacle != null)
-                {
-                    obstacle.GetComponent<ZDGTouchable>().Explote();
-                    obstacle.SetActive(false);
-                }
-            }
-        }
 
         public void CenterCar()
         {
@@ -383,13 +350,6 @@ namespace ZombieDriveGame
             
             playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
             Vector3.Lerp(playerObject.transform.position, new Vector3(0, 0, playerObject.transform.position.z), Time.deltaTime * playerObject.speed);
-            
-         
-            /*for (index = 0; index < playerObject.wheels.Length; index++)
-            {
-                if (index < 2) playerObject.wheels[index].localEulerAngles = Vector3.up * turnDirection;
-                else playerObject.wheels[index].Find("Wheel").Rotate(Vector3.right * Time.deltaTime * 100, Space.Self);
-            }*/
 
             if (turn)
                 playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, turnDirection, Time.deltaTime * 1);//  Vector3.RotateTowards(playerObject.transform.eulerAngles, Vector3.up * turnDirection, Time.deltaTime * playerObject.turnSpeed, 0.0F);
@@ -398,7 +358,6 @@ namespace ZombieDriveGame
 
             if (playerObject.transform.position.x < -.1f || playerObject.transform.position.x > .1f)
             {
-                ExploteObstacles();
                 if (playerObject.transform.position.x < -.1f) TurnRight();
                 else if (playerObject.transform.position.x > .1f) TurnLeft();
             }
@@ -407,7 +366,6 @@ namespace ZombieDriveGame
                 turn = false;
                 if (!finish)
                 {
-                    StartCoroutine(FinishAnimation());
                     finish = true;
                 }
             } 
@@ -424,47 +382,18 @@ namespace ZombieDriveGame
                 {
                     // Move the player forward even before we start playing
                     playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
-
-                    // Rotate the car wheels as it moves forward, and turn the front wheels based on the turning direction
-                    /*for (index = 0; index < playerObject.wheels.Length; index++)
-                    {
-                        if (index < 2) playerObject.wheels[index].localEulerAngles = Vector3.up * turnDirection;
-                        else playerObject.wheels[index].Find("Wheel").Rotate(Vector3.right * Time.deltaTime * 100, Space.Self);
-                    }*/
                 }
             }
 			else
 			{
-				//If the game is over, listen for the Restart and MainMenu buttons
-				if ( isGameOver == true )
-				{
-					//The jump button restarts the game
-					if ( Input.GetButtonDown(confirmButton) )
-					{
-						Restart();
-					}
-					
-					//The pause button goes to the main menu
-					if ( Input.GetButtonDown(pauseButton) )
-					{
-						MainMenu();
-					}
-				}
-				else
-				{
+
+				
                     // If there is a player object, move it forward and turn it in the correct direction
                     if (playerObject)
                     {
-                        // Move the player forward
+
                         playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
 
-                        // Rotate the car wheels as it moves forward, and turn the front wheels based on the turning direction
-                        /*for (index = 0; index < playerObject.wheels.Length; index++)
-                        {
-                            if (index < 2) playerObject.wheels[index].localEulerAngles = Vector3.up * turnDirection;
-                            else playerObject.wheels[index].Find("Wheel").Rotate(Vector3.right * Time.deltaTime * 100, Space.Self);
-                        }*/
-                        // Rotate the player to the correct angle
                         if(turn)
                             /*if ( playerObject.transform.eulerAngles.y != turnDirection ) */playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, turnDirection, Time.deltaTime * playerObject.turnSpeed);//  Vector3.RotateTowards(playerObject.transform.eulerAngles, Vector3.up * turnDirection, Time.deltaTime * playerObject.turnSpeed, 0.0F);
                         else
@@ -472,32 +401,13 @@ namespace ZombieDriveGame
                             playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, 0, Time.deltaTime * playerObject.turnSpeed);
                         }
 
-
-                        // If the player touches the edges of the street, bounce it back
                         if (playerObject.transform.position.x > streetEdge || playerObject.transform.position.x < -streetEdge) BounceOffRail();
-                        
-                        // Count down the time until game over
-                        /*if (playerObject.fuel > 0)
-                        {
-                            // Reduce from the player's fuel
-                            playerObject.fuel -= Time.deltaTime * playerObject.speed * 0.2f;
-
-                            // Update the timer
-                            UpdateFuel();
-                        }*/
                     }
 
-                    // Count the delay for losing health. If this is larger than 0, you can't lose health
                     if (loseHealthDelayCount > 0) loseHealthDelayCount -= Time.deltaTime;
 
-                    // If we press the turn button, Turn!
-                    /*if (!EventSystem.current.IsPointerOverGameObject())
-                    {
-                        if (Input.GetButtonDown(turnButton)) turnDirection *= -1;
-                    }*/
 
-                    // Count down to the next target spawn
-                    if ( isSpawning == true )
+                    if ( isSpawning == true && playerObject != null)
                     {
                         if (spawnGapCount > 0) spawnGapCount -= playerObject.speed * Time.deltaTime;
                         else
@@ -527,48 +437,15 @@ namespace ZombieDriveGame
 
                                 // Add to the spawn gap based on the spawn object
                                 spawnGapCount += spawnObstaclesList[randomSpawn].spawnGap;
-
-                                lastObstacles.Add(newSpawn.gameObject);
-                                if (lastObstacles.Count > spawnPickupRate + 1) lastObstacles.RemoveAt(0);
                             }
                             else
                             {
-                                if(prizeCont == 0)
-                                {
-                                    if(tokensCollected >= totalTokensInLevel * 0.3f)
-                                    {
-                                        prizeCont++;
-                                        prizeManager.GetPrizeToSpawn(new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20));
-                                    }
-                                    else
-                                    {
-                                        Transform newSpawn = Instantiate(tokenPrefab.transform) as Transform;
-                                        newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
-                                    }
-                                }
-                                else if (prizeCont == 1)
-                                {
-                                    if (tokensCollected >= totalTokensInLevel * .7f)
-                                    {
-                                        prizeCont++;
-                                        prizeManager.GetPrizeToSpawn(new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20));
-                                    }
-                                    else
-                                    {
-                                        Transform newSpawn = Instantiate(tokenPrefab.transform) as Transform;
-                                        newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
-                                    }
-                                }
-                                else
-                                {
-                                    // Create a new random target from the target list
-                                    Transform newSpawn = Instantiate(tokenPrefab.transform) as Transform;
+                                // Create a new random target from the target list
+                                Transform newSpawn = Instantiate(tokenPrefab.transform) as Transform;
 
-                                    // Place the target at a random position along the height
-                                    newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
-
-                                }
-                                    spawnPickupRateCount = spawnPickupRate;  
+                                // Place the target at a random position along the height
+                                newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
+                                spawnPickupRateCount = spawnPickupRate;  
                             }
                         }
                     }
@@ -579,12 +456,10 @@ namespace ZombieDriveGame
 						if ( isPaused == true )    Unpause();
 						else    Pause(true);
 					}
-				}
+				
 			}
 
-
-            if ((isGameOver && !finishAnimation)) CenterCar();
-            else if (!tutorial)
+            if (!tutorial)
             {
                 if (mobile)
                 {
@@ -641,32 +516,9 @@ namespace ZombieDriveGame
                 // Repeat the ground object if the player goes forward enough
                 if (groundObject && playerObject.transform.position.z > groundObject.position.z + groundRepeatDistance) groundObject.position += Vector3.forward * groundRepeatDistance;
 
-                //if (cameraObject)
-                //{
-                    //cameraObject.position = new Vector3(playerObjects[currentPlayer].position.x, cameraObject.position.y, playerObjects[currentPlayer].position.z);
-                //}
-
             }
         }
 
-        /// <summary>
-		/// Updates the timer text, and checks if time is up
-		/// </summary>
-		void UpdateFuel()
-        {
-            /*if ( playerObject )
-            {
-                // Update the fuel bar
-                fuelCanvas.GetComponent<Image>().fillAmount = playerObject.fuel / playerObject.fuelMax;
-
-                // Time's up!
-                if ( playerObject.fuel <= 0 )
-                {
-                    StartCoroutine(GameOver(0));
-                }
-            }*/
-            
-        }
 
         /// <summary>
         /// Changes the lives of the player. If lives reach 0, it's game over
@@ -895,104 +747,17 @@ namespace ZombieDriveGame
 
             yield return new WaitForSeconds(2);
 
+            PlayerPrefs.SetInt("Tokens", PlayerPrefs.GetInt("Tokens") + tokensCollected);
+
             SceneManager.LoadScene(1);
-
-            //Remove the pause and game screens
-            if ( pauseCanvas )    pauseCanvas.gameObject.SetActive(false);
-            if ( gameCanvas )    gameCanvas.gameObject.SetActive(false);
-
-            //Show the game over screen
-            if ( gameOverCanvas )    
-			{
-				//Show the game over screen
-				gameOverCanvas.gameObject.SetActive(true);
-				
-				//Write the score text
-				gameOverCanvas.Find("Base/TextScore").GetComponent<Text>().text = "SCORE " + score.ToString();
-				
-				//Check if we got a high score
-				if ( score > highScore )    
-				{
-					highScore = score;
-					
-					//Register the new high score
-					PlayerPrefs.SetInt(SceneManager.GetActiveScene().name + "HighScore", score);
-				}
-				
-				//Write the high sscore text
-				gameOverCanvas.Find("Base/TextHighScore").GetComponent<Text>().text = "HIGH SCORE " + highScore.ToString();
-
-				//If there is a source and a sound, play it from the source
-				if ( soundSource && soundGameOver )    
-				{
-					soundSource.GetComponent<AudioSource>().pitch = 1;
-					
-					soundSource.GetComponent<AudioSource>().PlayOneShot(soundGameOver);
-				}
-			}
 		}
 		
-		/// <summary>
-		/// Restart the current level
-		/// </summary>
-		void  Restart()
-		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-		}
 		
-		/// <summary>
-		/// Restart the current level
-		/// </summary>
 		void  MainMenu()
 		{
 			SceneManager.LoadScene(mainMenuLevelName);
 		}
 
-        void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-
-            // Draw two lines to show the edges of the street
-            Gizmos.DrawLine(new Vector3(streetEdge, 1, 0), new Vector3(streetEdge, 0,10));
-            Gizmos.DrawLine(new Vector3(-streetEdge, 1, 0), new Vector3(-streetEdge, 0, 10));
-        }
-
-        IEnumerator FinishAnimation()
-        {
-            if (!finishAnimation)
-            {
-                yield return new WaitForSeconds(1);
-                finishAnimation = true;
-                vanAnimator.SetTrigger("Finish");
-                if (flipSound != 0)
-                {
-                    SoundController.instance.playSound(SoundController.instance.FlipSound, false, SoundController.instance.carAudioSource);
-                    flipSound = 0;
-                }
-                yield return new WaitForSeconds(1);
-                cameraAnimator.SetTrigger("Finish");
-                cuyAnimator.SetTrigger("Saludo");
-
-                yield return new WaitForSeconds(1.5f);
-
-                cuyRenderer.material = materials[1];
-
-                yield return new WaitForSeconds(0.5f);
-
-                cuyRenderer.material = materials[0];
-
-                yield return new WaitForSeconds(2);
-                winCanvas.SetActive(true);
-                yield return new WaitForSeconds(2);
-                SceneManager.LoadScene(0);
-            }
-            
-        }
-
-        public void BackMenu()
-        {
-            SceneManager.LoadScene(0);
-        }
 
         IEnumerator IncreseSpeed()
         {
@@ -1002,18 +767,5 @@ namespace ZombieDriveGame
             StartCoroutine(IncreseSpeed());
         }
 
-        public void ActivatePowerUp()
-        {
-            StartCoroutine(PowerUp());
-        }
-
-        IEnumerator PowerUp()
-        {
-            var speed = playerObject.speed;
-            playerObject.speed = 0;
-            yield return new WaitForSeconds(4);
-            playerObject.speed = speed;
-            BombButton.SetActive(true);
-        }
     }
 }

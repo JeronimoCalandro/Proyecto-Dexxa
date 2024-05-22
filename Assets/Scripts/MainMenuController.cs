@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
+    public GameObject lifesPanel;
+    public GameObject tokensPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,8 +25,19 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene(2);
     }
 
-    public void LoadMenuScene()
+    public void OpenLifesPanel()
     {
-        SceneManager.LoadScene(1);
+        lifesPanel.SetActive(true);
+    }
+
+    public void OpenTokensPanel()
+    {
+        tokensPanel.SetActive(true);
+    }
+
+    public void ClosePanels()
+    {
+        lifesPanel.SetActive(false);
+        tokensPanel.SetActive(false);
     }
 }
