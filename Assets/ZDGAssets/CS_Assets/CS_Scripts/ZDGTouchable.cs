@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace ZombieDriveGame
 {
@@ -31,11 +32,23 @@ namespace ZombieDriveGame
 
         public GameObject UIToken;
         public GameObject UILife;
+
+        public GameObject[] meshes;
+        int number;
         
         void Start()
         {
             if(randomRotation)
                 transform.eulerAngles = Vector3.up * Random.Range( rotationRange.x, rotationRange.y);
+
+            /*if(meshes.Length > 0)
+            {
+                foreach (var item in meshes)
+                {
+                    item.SetActive(false);
+                }
+            }*/
+            
         }
 
         /// <summary>
@@ -62,23 +75,51 @@ namespace ZombieDriveGame
                     SoundController.instance.playSound(SoundController.instance.Token, false, SoundController.instance.fxAudioSource);
                     var token = Instantiate(UIToken);
                     token.transform.position = transform.position;
+                    TokenFactory.Instance.ReturnBullet(this);
                 }
+                else
+                    RockFactory.Instance.ReturnBullet(this);
 
-                if (UILife)
-                {
-                    //SoundController.instance.playSound(SoundController.instance.Token, false, SoundController.instance.fxAudioSource);
-                    var token = Instantiate(UILife);
-                    token.transform.position = transform.position;
-                }
-
-                // Remove the object from the game
-                Destroy(gameObject);
             }
         }
 
         public void Explote()
         {
             Instantiate(exploteEffect, transform.position, transform.rotation);
+        }
+
+        private void Reset()
+        {
+            foreach (var item in meshes)
+            {
+                item.SetActive(false);
+            }
+        }
+
+        public static void TurnOn(ZDGTouchable b)
+        {
+            b.Reset();
+            b.gameObject.SetActive(true);
+        }
+
+        public static void TurnOff(ZDGTouchable b)
+        {
+            b.gameObject.SetActive(false);
+        }
+
+        public void SetTouchable(int number)
+        {
+            if (meshes.Length > 0)
+            {
+                meshes[number].SetActive(true);
+                StartCoroutine(ReturnRock());
+            }
+        }
+
+        IEnumerator ReturnRock()
+        {
+            yield return new WaitForSeconds(5);
+            RockFactory.Instance.ReturnBullet(this);
         }
     }
 }

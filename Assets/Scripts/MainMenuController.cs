@@ -11,7 +11,8 @@ public class MainMenuController : MonoBehaviour
     public Text[] tokensTexts;
     public Image topBar;
 
-    // Start is called before the first frame update
+    AsyncOperation asyncLoad;
+    
     void Start()
     {
         foreach (var text in tokensTexts) 
@@ -20,17 +21,23 @@ public class MainMenuController : MonoBehaviour
         }
 
         topBar.fillAmount = (float)PlayerPrefs.GetInt("Tokens") / 100;
+        StartCoroutine(LoadYourAsyncScene());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator LoadYourAsyncScene()
     {
-        
+        asyncLoad = SceneManager.LoadSceneAsync(2);
+        asyncLoad.allowSceneActivation = false;
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
     }
 
     public void LoadGameScene()
     {
-        SceneManager.LoadScene(2);
+        asyncLoad.allowSceneActivation = true;
     }
 
     public void OpenLifesPanel()

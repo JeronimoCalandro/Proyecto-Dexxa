@@ -21,7 +21,7 @@ namespace ZombieDriveGame
 		void Start() 
 		{
 			// Remove this object after a delay
-			Destroy( gameObject, removeAfterTime);
+			//Destroy( gameObject, removeAfterTime);
 		}
 	}
 }

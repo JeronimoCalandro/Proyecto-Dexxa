@@ -415,23 +415,26 @@ namespace ZombieDriveGame
                             // Reset the spawn delay count
                             spawnGapCount = Random.Range(spawnGap.x, spawnGap.y);
 
-                            if((tokensCollected == 3 || tokensCollected == 8 || tokensCollected == 13 || tokensCollected == 18) && spawnLife)
+                            /*if((tokensCollected == 3 || tokensCollected == 8 || tokensCollected == 13 || tokensCollected == 18) && spawnLife)
                             {
                                 Transform newSpawn = Instantiate(lifePrefab) as Transform;
                                 newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
                                 spawnLife = false;
                                 spawnPickupRateCount = spawnPickupRate;
-                            }
-                            else if (spawnPickupRateCount > 0)
+                            }*/
+                            if (spawnPickupRateCount > 0)
                             {
                                 // Choose a random spawn from the list of spawns
-                                int randomSpawn = Mathf.FloorToInt(Random.Range(0, spawnObstaclesList.Length));
+                                //int randomSpawn = Mathf.FloorToInt(Random.Range(0, spawnObstaclesList.Length));
+                                int randomSpawn = Mathf.FloorToInt(Random.Range(0, 3));
 
-                                // Create a new random target from the target list
-                                Transform newSpawn = Instantiate(spawnObstaclesList[randomSpawn].spawnObject) as Transform;
-
+                            // Create a new random target from the target list
+                            //Transform newSpawn = Instantiate(spawnObstaclesList[randomSpawn].spawnObject) as Transform;
+                                ZDGTouchable newSpawn = RockFactory.Instance.GetBullet();
+                                newSpawn.SetTouchable(randomSpawn);
+                           
                                 // Place the target at a random position along the height
-                                newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
+                                newSpawn.transform.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
 
                                 spawnPickupRateCount--;
 
@@ -440,11 +443,13 @@ namespace ZombieDriveGame
                             }
                             else
                             {
-                                // Create a new random target from the target list
-                                Transform newSpawn = Instantiate(tokenPrefab.transform) as Transform;
+                            // Create a new random target from the target list
+                            //Transform newSpawn = Instantiate(tokenPrefab.transform) as Transform;
+                                ZDGTouchable newSpawn = TokenFactory.Instance.GetBullet();
+                
 
                                 // Place the target at a random position along the height
-                                newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
+                                newSpawn.transform.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
                                 spawnPickupRateCount = spawnPickupRate;  
                             }
                         }
