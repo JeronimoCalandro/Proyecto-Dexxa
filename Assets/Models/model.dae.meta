@@ -1,34 +1,14 @@
 fileFormatVersion: 2
-guid: 76ff25caaa5920e48be9a305dada1ee6
+guid: e9905468190b54d4cb9efcea117cac98
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: color_1206582
-    second: {instanceID: 0}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: color_16768282
-    second: {instanceID: 0}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: color_4634441
-    second: {instanceID: 0}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: color_6383466
-    second: {instanceID: 0}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0

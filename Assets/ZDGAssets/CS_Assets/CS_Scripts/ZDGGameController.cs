@@ -424,7 +424,7 @@ namespace ZombieDriveGame
                             {
                                 // Choose a random spawn from the list of spawns
                                 //int randomSpawn = Mathf.FloorToInt(Random.Range(0, spawnObstaclesList.Length));
-                                int randomSpawn = Mathf.FloorToInt(Random.Range(0, 3));
+                                int randomSpawn = Mathf.FloorToInt(Random.Range(0, 4));
 
                             // Create a new random target from the target list
                             //Transform newSpawn = Instantiate(spawnObstaclesList[randomSpawn].spawnObject) as Transform;
