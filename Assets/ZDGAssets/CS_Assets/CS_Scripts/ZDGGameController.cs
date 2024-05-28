@@ -208,16 +208,15 @@ namespace ZombieDriveGame
             //if (LevelManager.instance.levelNumber != 1) tutorial = false;
             StartCoroutine(IncreseSpeed());
             //totalTokensInLevel = LevelManager.instance.levelNumber + 9;
-            totalTokensInLevel = (LevelManager.instance.levelNumber - 1) * (20 - 5) / (100 - 1) + 5;
+            //totalTokensInLevel = (LevelManager.instance.levelNumber - 1) * (20 - 5) / (100 - 1) + 5;
             totalTokensInLevel = 1000000;
 
-            spawnPickupRate = (LevelManager.instance.levelNumber - 1) * (8 - 5) / (100 - 1) + 5;
+            spawnPickupRate =  5;
             
-            spawnGap.x = (LevelManager.instance.levelNumber - 1) * (3f - 4) / (100 - 1) + 4;
             spawnGap.x = 3.5F;
             spawnGap.y = spawnGap.x;
 
-            playerObject.speed = (LevelManager.instance.levelNumber - 1) * (8.5f - 7) / (100 - 1) + 7;
+            playerObject.speed =  7;
 
             scoreText.GetComponent<Text>().text = tokensCollected.ToString();
 
