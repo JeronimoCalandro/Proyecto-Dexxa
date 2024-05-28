@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using ZombieDriveGame.Types;
 using System.Collections.Generic;
-using Bitel.PlanetaEscape.Game;
 
 namespace ZombieDriveGame
 {
