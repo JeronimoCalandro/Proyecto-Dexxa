@@ -751,6 +751,7 @@ namespace ZombieDriveGame
             yield return new WaitForSeconds(2);
 
             PlayerPrefs.SetInt("Tokens", PlayerPrefs.GetInt("Tokens") + tokensCollected);
+            PlayerPrefs.SetInt("Lifes", PlayerPrefs.GetInt("Lifes") - 1);
 
             SceneManager.LoadScene(1);
 		}

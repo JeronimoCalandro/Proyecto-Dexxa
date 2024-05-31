@@ -20,6 +20,12 @@ public class MainMenuController : MonoBehaviour
     
     void Start()
     {
+        if (PlayerPrefs.GetInt("First") == 0)
+        {
+            PlayerPrefs.SetInt("First", 1);
+            PlayerPrefs.SetInt("Lifes", 3);
+        }
+
         foreach (var text in tokensTexts) 
         { 
             text.text = PlayerPrefs.GetInt("Tokens").ToString();   
@@ -95,8 +101,9 @@ public class MainMenuController : MonoBehaviour
 
     public void LoadGameScene()
     {
-        if(PlayerPrefs.GetInt("Lifes") > 0)
+        if (PlayerPrefs.GetInt("Lifes") > 0)
             asyncLoad.allowSceneActivation = true;
+        else lifesPanel.SetActive(true);
     }
 
     public void OpenLifesPanel()
@@ -120,5 +127,17 @@ public class MainMenuController : MonoBehaviour
         yield return new WaitForSeconds(1);
         claimTimeText.text = GetTimeToNextClaim();
         StartCoroutine(SetTimeText());
+    }
+
+
+
+
+    public void AddLifes()
+    {
+        PlayerPrefs.SetInt("Lifes", PlayerPrefs.GetInt("Lifes") + 1);
+        foreach (var text in lifesTexts)
+        {
+            text.text = PlayerPrefs.GetInt("Lifes").ToString();
+        }
     }
 }
