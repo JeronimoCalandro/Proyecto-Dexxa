@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class MainMenuController : MonoBehaviour
 {
     public GameObject lifesPanel;
     public GameObject tokensPanel;
     public Text[] tokensTexts;
+    public Text[] lifesTexts;
     public Image topBar;
+    public Text claimTimeText;
+    public GameObject lifesButton;
 
     AsyncOperation asyncLoad;
+
     
     void Start()
     {
@@ -19,9 +24,62 @@ public class MainMenuController : MonoBehaviour
         { 
             text.text = PlayerPrefs.GetInt("Tokens").ToString();   
         }
+        foreach (var text in lifesTexts)
+        {
+            text.text = PlayerPrefs.GetInt("Lifes").ToString();
+        }
 
         topBar.fillAmount = (float)PlayerPrefs.GetInt("Tokens") / 100;
         StartCoroutine(LoadYourAsyncScene());
+
+        string lastTime = PlayerPrefs.GetString("LastClaimTime", "");
+        DateTime lastClaimTime;
+
+        if (!string.IsNullOrEmpty(lastTime))
+        {
+            lastClaimTime = DateTime.Parse(lastTime);
+        }
+        else
+        {
+            lastClaimTime = DateTime.MinValue;
+        }
+
+        if(DateTime.Today > lastClaimTime)
+        {
+            lifesButton.SetActive(true);
+            claimTimeText.gameObject.SetActive(false);
+        }
+        else
+        {
+            lifesButton.SetActive(false);
+            claimTimeText.gameObject.SetActive(true);
+            claimTimeText.text = GetTimeToNextClaim();
+        }
+        StartCoroutine(SetTimeText());
+    }
+
+    private string GetTimeToNextClaim()
+    {
+        int hours = Mathf.FloorToInt((float)(DateTime.Today.AddDays(1) - DateTime.Now).TotalHours);
+        int minutes = Mathf.FloorToInt((float)(DateTime.Today.AddDays(1) - DateTime.Now).TotalMinutes) % 60;
+        int seconds = Mathf.FloorToInt((float)(DateTime.Today.AddDays(1) - DateTime.Now).TotalSeconds) % 60;
+        return (hours + ":" + minutes + ":" + seconds);
+    }
+
+    public void OnClaimLifes()
+    {
+        PlayerPrefs.SetString("LastClaimTime", DateTime.Now.ToString());
+        claimTimeText.text = GetTimeToNextClaim();
+        lifesButton.SetActive(false);
+        claimTimeText.gameObject.SetActive(true);
+
+        PlayerPrefs.SetInt("Lifes", PlayerPrefs.GetInt("Lifes") + 3);
+        foreach (var text in lifesTexts)
+        {
+            text.text = PlayerPrefs.GetInt("Lifes").ToString();
+        }
+
+        Debug.Log("APRETE");
     }
 
     IEnumerator LoadYourAsyncScene()
@@ -37,7 +95,8 @@ public class MainMenuController : MonoBehaviour
 
     public void LoadGameScene()
     {
-        asyncLoad.allowSceneActivation = true;
+        if(PlayerPrefs.GetInt("Lifes") > 0)
+            asyncLoad.allowSceneActivation = true;
     }
 
     public void OpenLifesPanel()
@@ -54,5 +113,12 @@ public class MainMenuController : MonoBehaviour
     {
         lifesPanel.SetActive(false);
         tokensPanel.SetActive(false);
+    }
+
+    IEnumerator SetTimeText()
+    {
+        yield return new WaitForSeconds(1);
+        claimTimeText.text = GetTimeToNextClaim();
+        StartCoroutine(SetTimeText());
     }
 }
