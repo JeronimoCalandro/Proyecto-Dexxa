@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 
+
 public class MainMenuController : MonoBehaviour
 {
     public GameObject lifesPanel;
@@ -14,10 +15,12 @@ public class MainMenuController : MonoBehaviour
     public Image topBar;
     public Text claimTimeText;
     public GameObject lifesButton;
+    public OpenExternalLink openExternalLink;
 
     AsyncOperation asyncLoad;
+    DateTime lastClaimTime;
+    string lastTime;
 
-    
     void Start()
     {
         if (PlayerPrefs.GetInt("First") == 0)
@@ -38,8 +41,8 @@ public class MainMenuController : MonoBehaviour
         topBar.fillAmount = (float)PlayerPrefs.GetInt("Tokens") / 100;
         StartCoroutine(LoadYourAsyncScene());
 
-        string lastTime = PlayerPrefs.GetString("LastClaimTime", "");
-        DateTime lastClaimTime;
+        lastTime = PlayerPrefs.GetString("LastClaimTime", "");
+        
 
         if (!string.IsNullOrEmpty(lastTime))
         {
@@ -85,7 +88,6 @@ public class MainMenuController : MonoBehaviour
             text.text = PlayerPrefs.GetInt("Lifes").ToString();
         }
 
-        Debug.Log("APRETE");
     }
 
     IEnumerator LoadYourAsyncScene()
@@ -126,11 +128,26 @@ public class MainMenuController : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         claimTimeText.text = GetTimeToNextClaim();
+
+
+        lastTime = PlayerPrefs.GetString("LastClaimTime", "");
+        if (!string.IsNullOrEmpty(lastTime))
+        {
+            lastClaimTime = DateTime.Parse(lastTime);
+        }
+        else
+        {
+            lastClaimTime = DateTime.MinValue;
+        }
+
+        if (DateTime.Today > lastClaimTime)
+        {
+            lifesButton.SetActive(true);
+            claimTimeText.gameObject.SetActive(false);
+        }
+
         StartCoroutine(SetTimeText());
     }
-
-
-
 
     public void AddLifes()
     {
@@ -140,4 +157,11 @@ public class MainMenuController : MonoBehaviour
             text.text = PlayerPrefs.GetInt("Lifes").ToString();
         }
     }
+
+    public void OpenURL(string urlName)
+    {
+        openExternalLink.OpenLink(urlName);
+    }
+
+
 }
