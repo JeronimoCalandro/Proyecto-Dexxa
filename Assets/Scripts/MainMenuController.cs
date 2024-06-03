@@ -16,6 +16,7 @@ public class MainMenuController : MonoBehaviour
     public Text claimTimeText;
     public GameObject lifesButton;
     public OpenExternalLink openExternalLink;
+    public ShareLink shareLink;
 
     AsyncOperation asyncLoad;
     DateTime lastClaimTime;
@@ -163,5 +164,15 @@ public class MainMenuController : MonoBehaviour
         openExternalLink.OpenLink(urlName);
     }
 
+    public void Share()
+    {
+        shareLink.Share();
+        StartCoroutine(AddLifesCoroutine());
+    }
 
+    IEnumerator AddLifesCoroutine()
+    {
+        yield return new WaitForSeconds(5);
+        AddLifes();
+    }
 }
