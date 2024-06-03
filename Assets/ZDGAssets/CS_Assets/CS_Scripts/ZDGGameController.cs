@@ -605,47 +605,51 @@ namespace ZombieDriveGame
         /// <param name="changeValue"></param>
         public void ChangeHealth(float changeValue)
         {
-            // Change the health value
-            playerObject.health += changeValue;
-
-            var aux = 3 - playerObject.health;
-
-            foreach (var sprite in lifesSprites)
+            if (playerObject.health >= 0)
             {
-                sprite.SetActive(true);
-            }
-            for (int i = 2; i >= playerObject.health; i--)
-            {
-                lifesSprites[i].SetActive(false);
-            }
-            if (lifesSprites[0].GetComponentInParent<Animation>()) lifesSprites[0].GetComponentInParent<Animation>().Play();
+                // Change the health value
+                playerObject.health += changeValue;
 
-            // Limit the value of the health to the maximum allowed value
-            if (playerObject.health > playerObject.healthMax) playerObject.health = playerObject.healthMax;
+                var aux = 3 - playerObject.health;
 
-            // If we are recieving damage, check if we should die
-            if ( loseHealthDelayCount <= 0 && changeValue < 0 )
-            {
-                if (playerObject.health <= 0)
+                foreach (var sprite in lifesSprites)
                 {
-                    playerObject.Die();
-
-                    // Health reached 0, so the target should die
-                    StartCoroutine(GameOver(1));
+                    sprite.SetActive(true);
                 }
+                for (int i = 2; i >= playerObject.health; i--)
+                {
+                    lifesSprites[i].SetActive(false);
+                }
+                if (lifesSprites[0].GetComponentInParent<Animation>()) lifesSprites[0].GetComponentInParent<Animation>().Play();
 
-                loseHealthDelayCount = loseHealthDelay;
+                // Limit the value of the health to the maximum allowed value
+                if (playerObject.health > playerObject.healthMax) playerObject.health = playerObject.healthMax;
+
+                // If we are recieving damage, check if we should die
+                if (loseHealthDelayCount <= 0 && changeValue < 0)
+                {
+                    if (playerObject.health <= 0)
+                    {
+                        playerObject.Die();
+
+                        // Health reached 0, so the target should die
+                        StartCoroutine(GameOver(1));
+                    }
+
+                    loseHealthDelayCount = loseHealthDelay;
+                }
             }
+            
 
             // Update the health bar 
-            if (healthCanvas)
+            /*if (healthCanvas)
             {
                 // Update the health bar based on the health we have
                 healthCanvas.GetComponent<Image>().fillAmount = playerObject.health / playerObject.healthMax;
 
                 // Play the animation of the health icon
                 if (healthCanvas.GetComponent<Animation>()) healthCanvas.GetComponent<Animation>().Play();
-            }
+            }*/
         }
 
         /// <summary>
@@ -751,6 +755,7 @@ namespace ZombieDriveGame
             yield return new WaitForSeconds(2);
 
             PlayerPrefs.SetInt("Tokens", PlayerPrefs.GetInt("Tokens") + tokensCollected);
+            if(PlayerPrefs.GetInt("Tokens") >= 100) PlayerPrefs.SetInt("Tokens", 100);
             PlayerPrefs.SetInt("Lifes", PlayerPrefs.GetInt("Lifes") - 1);
 
             SceneManager.LoadScene(1);
