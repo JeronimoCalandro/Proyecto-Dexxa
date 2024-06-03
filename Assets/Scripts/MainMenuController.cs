@@ -24,6 +24,8 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        
+        
         if (PlayerPrefs.GetInt("First") == 0)
         {
             PlayerPrefs.SetInt("First", 1);
@@ -78,6 +80,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnClaimLifes()
     {
+        ButtonSound();
         PlayerPrefs.SetString("LastClaimTime", DateTime.Now.ToString());
         claimTimeText.text = GetTimeToNextClaim();
         lifesButton.SetActive(false);
@@ -104,6 +107,7 @@ public class MainMenuController : MonoBehaviour
 
     public void LoadGameScene()
     {
+        ButtonSound();
         if (PlayerPrefs.GetInt("Lifes") > 0)
             asyncLoad.allowSceneActivation = true;
         else lifesPanel.SetActive(true);
@@ -111,16 +115,19 @@ public class MainMenuController : MonoBehaviour
 
     public void OpenLifesPanel()
     {
+        ButtonSound();
         lifesPanel.SetActive(true);
     }
 
     public void OpenTokensPanel()
     {
+        ButtonSound();
         tokensPanel.SetActive(true);
     }
 
     public void ClosePanels()
     {
+        SoundController.instance.playSound(SoundController.instance.back, false, SoundController.instance.fxAudioSource);
         lifesPanel.SetActive(false);
         tokensPanel.SetActive(false);
     }
@@ -161,11 +168,13 @@ public class MainMenuController : MonoBehaviour
 
     public void OpenURL(string urlName)
     {
+        ButtonSound();
         openExternalLink.OpenLink(urlName);
     }
 
     public void Share()
     {
+        ButtonSound();
         shareLink.Share();
         StartCoroutine(AddLifesCoroutine());
     }
@@ -175,4 +184,10 @@ public class MainMenuController : MonoBehaviour
         yield return new WaitForSeconds(5);
         AddLifes();
     }
+
+    void ButtonSound()
+    {
+        SoundController.instance.playSound(SoundController.instance.button, false, SoundController.instance.fxAudioSource);
+    }
+
 }

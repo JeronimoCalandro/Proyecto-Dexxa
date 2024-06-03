@@ -57,7 +57,7 @@ namespace Bitel.PlanetaParacaidas.Map
         {
             SoundController.instance.stopMusicSound();
             SoundController.instance.stopFxSound(SoundController.instance.fxAudioSource);
-            SoundController.instance.playMusic(SoundController.instance.MapMusic);
+            
             Debug.Log("Map controller started");
             if (mapMaker == null) mapMaker = GetComponent<MapMaker>();
 

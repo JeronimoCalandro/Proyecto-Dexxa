@@ -25,5 +25,6 @@ public class SplashController : MonoBehaviour
     public void LoadMenu()
     {
         asyncLoad.allowSceneActivation = true;
+        SoundController.instance.playMusic(SoundController.instance.GameMusic);
     }
 }

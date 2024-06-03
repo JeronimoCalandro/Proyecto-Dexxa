@@ -11,17 +11,15 @@ public class SoundController : MonoBehaviour
     public AudioSource carAudioSource;
 
     [Header("Temple Escape Sounds")]
-    public AudioClip MapMusic;
     public AudioClip GameMusic;
-    public AudioClip WinSound;
     public AudioClip LoseSound;
     public AudioClip CrashSound;
-    public AudioClip PrizeSound;
-    public AudioClip PowerUpSound;
     public AudioClip FlipSound;
     public AudioClip CarSound;
     public AudioClip Token;
     public AudioClip Token2;
+    public AudioClip button;
+    public AudioClip back;
     void Awake()
     {
         if (instance == null)

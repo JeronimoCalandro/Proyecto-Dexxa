@@ -220,9 +220,6 @@ namespace ZombieDriveGame
 
             scoreText.GetComponent<Text>().text = tokensCollected.ToString();
 
-            SoundController.instance.stopMusicSound();
-            SoundController.instance.stopFxSound(SoundController.instance.fxAudioSource);
-            SoundController.instance.playMusic(SoundController.instance.GameMusic);
             SoundController.instance.playSound(SoundController.instance.CarSound, true, SoundController.instance.fxAudioSource);
 
             // If the camera is not assigned yet, assign it and set the camera holder too
@@ -607,6 +604,8 @@ namespace ZombieDriveGame
         {
             if (playerObject.health >= 0)
             {
+                SoundController.instance.stopFxSound(SoundController.instance.fxAudioSource);
+                SoundController.instance.playSound(SoundController.instance.CrashSound, false, SoundController.instance.fxAudioSource);
                 // Change the health value
                 playerObject.health += changeValue;
 
@@ -746,7 +745,8 @@ namespace ZombieDriveGame
         /// </summary>
         IEnumerator GameOver(float delay)
 		{
-			isGameOver = true;
+            SoundController.instance.playSound(SoundController.instance.LoseSound, false, SoundController.instance.fxAudioSource);
+            isGameOver = true;
 
 			yield return new WaitForSeconds(delay);
 
