@@ -26,5 +26,6 @@ public class SplashController : MonoBehaviour
     {
         asyncLoad.allowSceneActivation = true;
         SoundController.instance.playMusic(SoundController.instance.GameMusic);
+        SoundController.instance.playSound(SoundController.instance.button, false, SoundController.instance.fxAudioSource);
     }
 }

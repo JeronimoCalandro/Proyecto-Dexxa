@@ -34,7 +34,6 @@ public class ShareLink : MonoBehaviour
         }
 
         _popupModal.ShowPopup("Copied results to clipboard!");*/
-        CopyToClipboardAndShare("¡Proba el videojuego de Dexxa y gana increibles premios! https://jeronimocalandro.github.io/Dexxa-game/");
-        Debug.Log("Copiado");
+        CopyToClipboardAndShare("¡Proba el videojuego de Dexxa y gana increibles premios! \n https://jeronimocalandro.github.io/Dexxa-game/");
     }
 }
