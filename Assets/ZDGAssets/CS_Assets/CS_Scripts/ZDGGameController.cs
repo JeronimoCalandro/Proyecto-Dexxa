@@ -138,6 +138,7 @@ namespace ZombieDriveGame
         bool spawnLife;
         public Transform lifePrefab;
         bool finish;
+        public Animation lifesParent;
 
         Touch lastTouch;
 
@@ -602,8 +603,7 @@ namespace ZombieDriveGame
         /// <param name="changeValue"></param>
         public void ChangeHealth(float changeValue)
         {
-            if (playerObject.health >= 0)
-            {
+            
                 SoundController.instance.stopFxSound(SoundController.instance.fxAudioSource);
                 SoundController.instance.playSound(SoundController.instance.CrashSound, false, SoundController.instance.fxAudioSource);
                 // Change the health value
@@ -619,7 +619,7 @@ namespace ZombieDriveGame
                 {
                     lifesSprites[i].SetActive(false);
                 }
-                if (lifesSprites[0].GetComponentInParent<Animation>()) lifesSprites[0].GetComponentInParent<Animation>().Play();
+                lifesParent.Play();
 
                 // Limit the value of the health to the maximum allowed value
                 if (playerObject.health > playerObject.healthMax) playerObject.health = playerObject.healthMax;
@@ -637,7 +637,7 @@ namespace ZombieDriveGame
 
                     loseHealthDelayCount = loseHealthDelay;
                 }
-            }
+            
             
 
             // Update the health bar 
