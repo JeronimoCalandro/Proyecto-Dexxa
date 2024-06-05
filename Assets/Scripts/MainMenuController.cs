@@ -17,6 +17,8 @@ public class MainMenuController : MonoBehaviour
     public GameObject lifesButton;
     public OpenExternalLink openExternalLink;
     public ShareLink shareLink;
+    public GameObject showRewards;
+    public Animator fadeAnimator;
 
     AsyncOperation asyncLoad;
     DateTime lastClaimTime;
@@ -30,6 +32,12 @@ public class MainMenuController : MonoBehaviour
         {
             PlayerPrefs.SetInt("First", 1);
             PlayerPrefs.SetInt("Lifes", 3);
+        }
+
+        if (PlayerPrefs.GetInt("Reward") == 0 && PlayerPrefs.GetInt("Tokens") > 0)
+        {
+            PlayerPrefs.SetInt("Reward", 1);
+            showRewards.SetActive(true);
         }
 
         foreach (var text in tokensTexts) 
@@ -109,7 +117,7 @@ public class MainMenuController : MonoBehaviour
     {
         ButtonSound();
         if (PlayerPrefs.GetInt("Lifes") > 0)
-            asyncLoad.allowSceneActivation = true;
+            StartCoroutine(Play());
         else lifesPanel.SetActive(true);
     }
 
@@ -190,4 +198,10 @@ public class MainMenuController : MonoBehaviour
         SoundController.instance.playSound(SoundController.instance.button, false, SoundController.instance.fxAudioSource);
     }
 
+    IEnumerator Play()
+    {
+        fadeAnimator.SetTrigger("Out");
+        yield return new WaitForSeconds(1.5f);
+        asyncLoad.allowSceneActivation = true;
+    }
 }

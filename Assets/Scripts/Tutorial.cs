@@ -15,6 +15,7 @@ namespace Bitel.PlanetaCorrer
         public bool wasTutorialSeen;
 
         public GameObject playNowButton;
+        public GameObject[] objects;
 
         float speed;
         //public PlayerManager playerManager;
@@ -87,10 +88,16 @@ namespace Bitel.PlanetaCorrer
 
             playNowButton.SetActive(false);
 
+            foreach (var item in objects)
+            {
+                item.SetActive(false);
+            }
+
             canStart = true;
             ZDGGameController.instance.playerObject.speed = speed;
             ZDGGameController.instance.tutorial = false;
             ZDGGameController.instance.ReadyGoEffecf();
+            StartCoroutine(ZDGGameController.instance.IncresedSpeed());
             this.enabled = false;
             //pauseMenu.StartCountdown();
         }
@@ -105,6 +112,11 @@ namespace Bitel.PlanetaCorrer
             tutorialFirstStep.SetActive(true);
 
             playNowButton.SetActive(true);
+
+            foreach (var item in objects)
+            {
+                item.SetActive(true);
+            }
 
         }
 

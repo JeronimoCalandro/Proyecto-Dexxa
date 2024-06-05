@@ -139,6 +139,7 @@ namespace ZombieDriveGame
         public Transform lifePrefab;
         bool finish;
         public Animation lifesParent;
+        public Animator fadeAnimator;
 
         Touch lastTouch;
 
@@ -212,7 +213,7 @@ namespace ZombieDriveGame
             //totalTokensInLevel = (LevelManager.instance.levelNumber - 1) * (20 - 5) / (100 - 1) + 5;
             totalTokensInLevel = 1000000;
 
-            spawnPickupRate =  5;
+            spawnPickupRate =  8;
             
             spawnGap.x = 3.5F;
             spawnGap.y = spawnGap.x;
@@ -688,13 +689,19 @@ namespace ZombieDriveGame
             }
         }
 
+        public IEnumerator IncresedSpeed()
+        {
+            yield return new WaitForSeconds(3f);
+            playerObject.speed += .3f;
+            StartCoroutine(IncresedSpeed());
+        }
         /// <summary>
 		/// Levels up, and increases the difficulty of the game
 		/// </summary>
 		void LevelUp()
         {
             //Increase game speed
-            playerObject.speed += levelUpSpeedIncrease;
+            //playerObject.speed += levelUpSpeedIncrease;
         }
 
         /// <summary>
@@ -750,7 +757,7 @@ namespace ZombieDriveGame
 
 			yield return new WaitForSeconds(delay);
 
-            //loseCanvas.SetActive(true);
+            fadeAnimator.SetTrigger("Out");
 
             yield return new WaitForSeconds(2);
 
