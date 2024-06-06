@@ -140,6 +140,7 @@ namespace ZombieDriveGame
         bool finish;
         public Animation lifesParent;
         public Animator fadeAnimator;
+        public IsMobileCheck IsMobileCheck;
 
         Touch lastTouch;
 
@@ -207,6 +208,8 @@ namespace ZombieDriveGame
         /// </summary>
         void Start()
 		{
+            mobile = IsMobileCheck.CheckMobile();
+           
             //if (LevelManager.instance.levelNumber != 1) tutorial = false;
             StartCoroutine(IncreseSpeed());
             //totalTokensInLevel = LevelManager.instance.levelNumber + 9;
