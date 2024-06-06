@@ -16,6 +16,7 @@ namespace Bitel.PlanetaCorrer
 
         public GameObject playNowButton;
         public GameObject[] objects;
+        public Text tutorialText;
 
         float speed;
         //public PlayerManager playerManager;
@@ -113,10 +114,16 @@ namespace Bitel.PlanetaCorrer
 
             playNowButton.SetActive(true);
 
-            foreach (var item in objects)
+            if (ZDGGameController.instance.IsMobileCheck.CheckMobile())
             {
-                item.SetActive(true);
+                
+                foreach (var item in objects)
+                {
+                    item.SetActive(true);
+                }
             }
+            else tutorialText.text = "Evita chocar con los obstaculos moviendote hacia los costados usando las flechas del teclado";
+
 
         }
 

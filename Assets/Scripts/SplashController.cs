@@ -6,10 +6,9 @@ using UnityEngine.SceneManagement;
 public class SplashController : MonoBehaviour
 {
     AsyncOperation asyncLoad;
-    public IsMobileCheck isMobileCheck;
     void Start()
     {
-        if (!isMobileCheck.CheckMobile()) Screen.SetResolution(1920, 1080, false);
+        //if (!isMobileCheck.CheckMobile()) Screen.SetResolution(1920, 1080, false);
         StartCoroutine(LoadYourAsyncScene());
     }
 
