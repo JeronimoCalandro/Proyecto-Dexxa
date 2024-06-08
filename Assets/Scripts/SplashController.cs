@@ -8,6 +8,11 @@ public class SplashController : MonoBehaviour
     AsyncOperation asyncLoad;
     void Start()
     {
+        // Set Platform Settings to optimize for disk size (LTO)
+        /*UnityEditor.EditorUserBuildSettings.SetPlatformSettings("Application.platform",
+                                            "CodeOptimization",
+                                            "disksizelto");*/
+
         //if (!isMobileCheck.CheckMobile()) Screen.SetResolution(1920, 1080, false);
         StartCoroutine(LoadYourAsyncScene());
     }
