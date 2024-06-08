@@ -422,7 +422,7 @@ namespace ZombieDriveGame
                                 spawnLife = false;
                                 spawnPickupRateCount = spawnPickupRate;
                             }*/
-                            /*if (spawnPickupRateCount > 0)
+                            if (spawnPickupRateCount > 0)
                             {
                                 // Choose a random spawn from the list of spawns
                                 //int randomSpawn = Mathf.FloorToInt(Random.Range(0, spawnObstaclesList.Length));
@@ -451,7 +451,7 @@ namespace ZombieDriveGame
                                 // Place the target at a random position along the height
                                 newSpawn.transform.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
                                 spawnPickupRateCount = spawnPickupRate;  
-                            }*/
+                            }
                         }
                     }
 
