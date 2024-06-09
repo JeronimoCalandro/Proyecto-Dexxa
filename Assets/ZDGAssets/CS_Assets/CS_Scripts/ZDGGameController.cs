@@ -138,6 +138,7 @@ namespace ZombieDriveGame
         public Animator fadeAnimator;
         public IsMobileCheck IsMobileCheck;
         public Text frameText;
+        public float deltaTime;
 
         Touch lastTouch;
 
@@ -371,7 +372,10 @@ namespace ZombieDriveGame
 
         void Update()
 		{
-            frameText.text = Application.targetFrameRate.ToString();
+            //frameText.text = Application.targetFrameRate.ToString();
+            deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
+            float fps = 1.0f / deltaTime;
+            frameText.text = Mathf.Ceil(fps).ToString();
 
             if (playerObject)
             {
