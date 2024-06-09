@@ -122,10 +122,6 @@ namespace ZombieDriveGame
 		// A general use index
 		internal int index = 0;
 
-        //public Transform slowMotionEffect;
-
-        public Animator vanAnimator;
-        public Animator cuyAnimator;
         bool leftButton = true;
         public bool turn;
         int tokensCollected = 0;
@@ -141,6 +137,7 @@ namespace ZombieDriveGame
         public Animation lifesParent;
         public Animator fadeAnimator;
         public IsMobileCheck IsMobileCheck;
+        public Text frameText;
 
         Touch lastTouch;
 
@@ -208,6 +205,7 @@ namespace ZombieDriveGame
         /// </summary>
         void Start()
 		{
+            Application.targetFrameRate = 30;
             mobile = IsMobileCheck.CheckMobile();
            
             //if (LevelManager.instance.levelNumber != 1) tutorial = false;
@@ -373,96 +371,47 @@ namespace ZombieDriveGame
 
         void Update()
 		{
-			// Delay the start of the game
-			if ( startDelay > 0 )
-			{
-				startDelay -= Time.deltaTime;
+            frameText.text = Application.targetFrameRate.ToString();
 
-                if (playerObject)
+            if (playerObject)
+            {
+                playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
+
+                if (turn)
+                    playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, turnDirection, Time.deltaTime * playerObject.turnSpeed);//  Vector3.RotateTowards(playerObject.transform.eulerAngles, Vector3.up * turnDirection, Time.deltaTime * playerObject.turnSpeed, 0.0F);
+                else
+                    playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, 0, Time.deltaTime * playerObject.turnSpeed);
+
+                if (playerObject.transform.position.x > streetEdge || playerObject.transform.position.x < -streetEdge) BounceOffRail();
+            }
+
+
+            if (isSpawning == true && playerObject != null)
+            {
+                if (spawnGapCount > 0) spawnGapCount -= playerObject.speed * Time.deltaTime;
+                else
                 {
-                    // Move the player forward even before we start playing
-                    playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
+                    spawnGapCount = Random.Range(spawnGap.x, spawnGap.y);
+                    if (spawnPickupRateCount > 0)
+                    {
+                        int randomSpawn = Mathf.FloorToInt(Random.Range(0, 4));
+                        ZDGTouchable newSpawn = RockFactory.Instance.GetBullet();
+                        newSpawn.SetTouchable(randomSpawn);
+
+                        newSpawn.transform.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
+
+                        spawnPickupRateCount--;
+
+                        spawnGapCount += spawnObstaclesList[randomSpawn].spawnGap;
+                    }
+                    else
+                    {
+                        ZDGTouchable newSpawn = TokenFactory.Instance.GetBullet();
+                        newSpawn.transform.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
+                        spawnPickupRateCount = spawnPickupRate;
+                    }
                 }
             }
-			else
-			{
-
-				
-                    // If there is a player object, move it forward and turn it in the correct direction
-                    if (playerObject)
-                    {
-
-                        playerObject.transform.Translate(Vector3.forward * Time.deltaTime * playerObject.speed, Space.Self);
-
-                        if(turn)
-                            /*if ( playerObject.transform.eulerAngles.y != turnDirection ) */playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, turnDirection, Time.deltaTime * playerObject.turnSpeed);//  Vector3.RotateTowards(playerObject.transform.eulerAngles, Vector3.up * turnDirection, Time.deltaTime * playerObject.turnSpeed, 0.0F);
-                        else
-                        {
-                            playerObject.transform.eulerAngles = Vector3.up * Mathf.LerpAngle(playerObject.transform.eulerAngles.y, 0, Time.deltaTime * playerObject.turnSpeed);
-                        }
-
-                        if (playerObject.transform.position.x > streetEdge || playerObject.transform.position.x < -streetEdge) BounceOffRail();
-                    }
-
-                    if (loseHealthDelayCount > 0) loseHealthDelayCount -= Time.deltaTime;
-
-
-                    if ( isSpawning == true && playerObject != null)
-                    {
-                        if (spawnGapCount > 0) spawnGapCount -= playerObject.speed * Time.deltaTime;
-                        else
-                        {
-                            // Reset the spawn delay count
-                            spawnGapCount = Random.Range(spawnGap.x, spawnGap.y);
-
-                            /*if((tokensCollected == 3 || tokensCollected == 8 || tokensCollected == 13 || tokensCollected == 18) && spawnLife)
-                            {
-                                Transform newSpawn = Instantiate(lifePrefab) as Transform;
-                                newSpawn.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
-                                spawnLife = false;
-                                spawnPickupRateCount = spawnPickupRate;
-                            }*/
-                            if (spawnPickupRateCount > 0)
-                            {
-                                // Choose a random spawn from the list of spawns
-                                //int randomSpawn = Mathf.FloorToInt(Random.Range(0, spawnObstaclesList.Length));
-                                int randomSpawn = Mathf.FloorToInt(Random.Range(0, 4));
-
-                            // Create a new random target from the target list
-                            //Transform newSpawn = Instantiate(spawnObstaclesList[randomSpawn].spawnObject) as Transform;
-                                ZDGTouchable newSpawn = RockFactory.Instance.GetBullet();
-                                newSpawn.SetTouchable(randomSpawn);
-                           
-                                // Place the target at a random position along the height
-                                newSpawn.transform.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
-
-                                spawnPickupRateCount--;
-
-                                // Add to the spawn gap based on the spawn object
-                                spawnGapCount += spawnObstaclesList[randomSpawn].spawnGap;
-                            }
-                            else
-                            {
-                            // Create a new random target from the target list
-                            //Transform newSpawn = Instantiate(tokenPrefab.transform) as Transform;
-                                ZDGTouchable newSpawn = TokenFactory.Instance.GetBullet();
-                
-
-                                // Place the target at a random position along the height
-                                newSpawn.transform.position = new Vector3(Random.Range(-streetEdge, streetEdge), 0, playerObject.transform.position.z + 20);
-                                spawnPickupRateCount = spawnPickupRate;  
-                            }
-                        }
-                    }
-
-					//Toggle pause/unpause in the game
-					if ( Input.GetButtonDown(pauseButton) )
-					{
-						if ( isPaused == true )    Unpause();
-						else    Pause(true);
-					}
-				
-			}
 
             if (!tutorial)
             {
@@ -607,42 +556,29 @@ namespace ZombieDriveGame
         /// <param name="changeValue"></param>
         public void ChangeHealth(float changeValue)
         {
-            
-                SoundController.instance.stopFxSound(SoundController.instance.fxAudioSource);
-                SoundController.instance.playSound(SoundController.instance.CrashSound, false, SoundController.instance.fxAudioSource);
-                // Change the health value
-                playerObject.health += changeValue;
+            SoundController.instance.stopFxSound(SoundController.instance.fxAudioSource);
+            SoundController.instance.playSound(SoundController.instance.CrashSound, false, SoundController.instance.fxAudioSource);
+            playerObject.health += changeValue;
 
-                var aux = 3 - playerObject.health;
+            var aux = 3 - playerObject.health;
 
-                foreach (var sprite in lifesSprites)
-                {
-                    sprite.SetActive(true);
-                }
-                for (int i = 2; i >= playerObject.health; i--)
-                {
-                    lifesSprites[i].SetActive(false);
-                }
-                lifesParent.Play();
+            foreach (var sprite in lifesSprites)
+            {
+                sprite.SetActive(true);
+            }
+            for (int i = 2; i >= playerObject.health; i--)
+            {
+                lifesSprites[i].SetActive(false);
+            }
+            lifesParent.Play();
 
-                // Limit the value of the health to the maximum allowed value
-                if (playerObject.health > playerObject.healthMax) playerObject.health = playerObject.healthMax;
+            if (playerObject.health <= 0)
+            {
+                playerObject.Die();
+                StartCoroutine(GameOver(1));
+            }
 
-                // If we are recieving damage, check if we should die
-                if (loseHealthDelayCount <= 0 && changeValue < 0)
-                {
-                    if (playerObject.health <= 0)
-                    {
-                        playerObject.Die();
 
-                        // Health reached 0, so the target should die
-                        StartCoroutine(GameOver(1));
-                    }
-
-                    loseHealthDelayCount = loseHealthDelay;
-                }
-            
-            
 
             // Update the health bar 
             /*if (healthCanvas)

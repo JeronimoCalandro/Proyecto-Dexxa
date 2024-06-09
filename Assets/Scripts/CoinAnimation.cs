@@ -22,7 +22,6 @@ public class CoinAnimation : MonoBehaviour
     {
         if (other.gameObject.layer == 7)
         {
-            Debug.Log("ENTRO");
             if (ui == "Life")
                 ZDGGameController.instance.ChangeHealth(1);
             else
