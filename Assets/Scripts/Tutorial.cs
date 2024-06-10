@@ -17,6 +17,8 @@ namespace Bitel.PlanetaCorrer
         public GameObject playNowButton;
         public GameObject[] objects;
         public Text tutorialText;
+        public GameObject obstacles;
+        public Animator lightAnimator;
 
         float speed;
         //public PlayerManager playerManager;
@@ -88,6 +90,7 @@ namespace Bitel.PlanetaCorrer
             tutorialFirstStep.SetActive(false);
 
             playNowButton.SetActive(false);
+            lightAnimator.enabled = true;
 
             foreach (var item in objects)
             {
@@ -113,6 +116,7 @@ namespace Bitel.PlanetaCorrer
             tutorialFirstStep.SetActive(true);
 
             playNowButton.SetActive(true);
+            obstacles.SetActive(true);
 
             if (ZDGGameController.instance.IsMobileCheck.CheckMobile())
             {

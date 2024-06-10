@@ -83,7 +83,8 @@ public class MainMenuController : MonoBehaviour
         int hours = Mathf.FloorToInt((float)(DateTime.Today.AddDays(1) - DateTime.Now).TotalHours);
         int minutes = Mathf.FloorToInt((float)(DateTime.Today.AddDays(1) - DateTime.Now).TotalMinutes) % 60;
         int seconds = Mathf.FloorToInt((float)(DateTime.Today.AddDays(1) - DateTime.Now).TotalSeconds) % 60;
-        return (hours + ":" + minutes + ":" + seconds);
+        //return (hours + ":" + minutes + ":" + seconds);
+        return string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
     }
 
     public void OnClaimLifes()
