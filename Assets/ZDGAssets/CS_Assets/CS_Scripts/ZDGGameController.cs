@@ -208,7 +208,6 @@ namespace ZombieDriveGame
         /// </summary>
         void Start()
 		{
-            Application.targetFrameRate = 30;
             mobile = IsMobileCheck.CheckMobile();
            
             //if (LevelManager.instance.levelNumber != 1) tutorial = false;
@@ -464,6 +463,23 @@ namespace ZombieDriveGame
                 }
             }*/
 
+            if(!mobile)
+            {
+                if (Input.GetAxisRaw("Horizontal") != 0)
+                {
+                    if (Input.GetAxisRaw("Horizontal") < 0) TurnLeft();
+                    else if (Input.GetAxisRaw("Horizontal") > 0) TurnRight();
+                }
+                else
+                {
+                    turn = false;
+                    if (flipSound != 2 && flipSound != 0)
+                    {
+                        SoundController.instance.stopFxSound(SoundController.instance.carAudioSource);
+                        flipSound = 2;
+                    }
+                }
+            }
             if (left) TurnLeft();
             if (right) TurnRight();
         }
