@@ -127,7 +127,7 @@ namespace ZombieDriveGame
         int tokensCollected = 0;
         int totalTokensInLevel;
 
-        int flipSound;
+        public int flipSound;
         public bool tutorial = true;
         public List<GameObject> lifesSprites = new List<GameObject>();
         public Material[] materials;

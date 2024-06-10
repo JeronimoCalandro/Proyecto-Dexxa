@@ -33,7 +33,13 @@ namespace BitelPlanetaParacaidasGame
             ZDGGameController.turn = false;
             ZDGGameController.left = false;
             ZDGGameController.right = false;
-            
+
+            ZDGGameController.turn = false;
+            if (ZDGGameController.flipSound != 2 && ZDGGameController.flipSound != 0)
+            {
+                SoundController.instance.stopFxSound(SoundController.instance.carAudioSource);
+                ZDGGameController.flipSound = 2;
+            }
             //ZDGPlayer.turnRange = 0;
         }
     }

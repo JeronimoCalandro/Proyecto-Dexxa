@@ -116,7 +116,7 @@ namespace Bitel.PlanetaCorrer
             tutorialFirstStep.SetActive(true);
 
             playNowButton.SetActive(true);
-            obstacles.SetActive(true);
+            //obstacles.SetActive(true);
 
             if (ZDGGameController.instance.IsMobileCheck.CheckMobile())
             {
@@ -126,7 +126,7 @@ namespace Bitel.PlanetaCorrer
                     item.SetActive(true);
                 }
             }
-            else tutorialText.text = "Evita chocar con los obstaculos moviendote hacia los costados usando las flechas del teclado";
+            else tutorialText.text = "Usa las flechas del teclado para moverte hacias los lados";
 
 
         }
