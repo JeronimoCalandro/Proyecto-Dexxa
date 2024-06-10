@@ -139,6 +139,8 @@ namespace ZombieDriveGame
         public IsMobileCheck IsMobileCheck;
         public Text frameText;
         public float deltaTime;
+        public bool left;
+        public bool right;
 
         Touch lastTouch;
 
@@ -417,7 +419,7 @@ namespace ZombieDriveGame
                 }
             }
 
-            if (!tutorial)
+            /*if (!tutorial)
             {
                 if (mobile)
                 {
@@ -460,7 +462,10 @@ namespace ZombieDriveGame
                         }
                     }
                 }
-            }
+            }*/
+
+            if (left) TurnLeft();
+            if (right) TurnRight();
         }
 
         void LateUpdate()

@@ -17,52 +17,13 @@ namespace BitelPlanetaParacaidasGame
         public static event Action<GameObject, PointerEventData> OnPointerClickEvent;
         public static event Action<GameObject> OnPointerExitEvent;
 
-        /*private void Update()
-        {
-#if UNITY_ANDROID || UNITY_IOS
-    
-#endif
-            if(Application.platform == RuntimePlatform.Android)
-            {
-                
-            }
-
-            if (Input.touchCount > 0)
-            {
-                var lastTouch = Input.GetTouch(Input.touchCount);
-                if (lastTouch.position.x < (float)Screen.width * .5f)
-                {
-                    if (lastTouch.phase == TouchPhase.Began)
-                    {
-                        ZDGGameController.TurnLeft();
-                    }
-                    if (lastTouch.phase == TouchPhase.Ended)
-                    {
-                        ZDGGameController.turn = false;
-                    }
-                }
-                else if (lastTouch.position.x > (float)Screen.width * .5f)
-                {
-                    if (lastTouch.phase == TouchPhase.Began)
-                    {
-                        ZDGGameController.TurnRight();
-                    }
-                    if (lastTouch.phase == TouchPhase.Ended)
-                    {
-                        ZDGGameController.turn = false;
-                    }
-                }
-            }
-                
-
-
-        }*/
+       
 
         public void OnPointerDown(PointerEventData eventData)
         {
 
-            if (left) ZDGGameController.TurnLeft();
-            else ZDGGameController.TurnRight();
+            if (left) ZDGGameController.left = true;
+            else ZDGGameController.right = true;
 
             //ZDGPlayer.turnRange = 40;
         }
@@ -70,6 +31,8 @@ namespace BitelPlanetaParacaidasGame
         public void OnPointerUp(PointerEventData eventData)
         {
             ZDGGameController.turn = false;
+            ZDGGameController.left = false;
+            ZDGGameController.right = false;
             
             //ZDGPlayer.turnRange = 0;
         }
