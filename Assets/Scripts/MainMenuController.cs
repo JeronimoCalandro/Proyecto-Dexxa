@@ -32,6 +32,7 @@ public class MainMenuController : MonoBehaviour
         {
             PlayerPrefs.SetInt("First", 1);
             PlayerPrefs.SetInt("Lifes", 3);
+            PlayerPrefs.SetString("LastClaimTime", DateTime.Now.ToString());
         }
 
         if (PlayerPrefs.GetInt("Reward") == 0 && PlayerPrefs.GetInt("Tokens") > 0)

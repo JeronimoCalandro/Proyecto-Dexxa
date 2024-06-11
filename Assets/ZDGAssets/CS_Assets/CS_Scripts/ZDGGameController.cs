@@ -146,6 +146,12 @@ namespace ZombieDriveGame
 
         public bool mobile;
 
+
+        private Vector2 touchStartPos;
+        private Vector2 touchEndPos;
+        private float screenWidth;
+        private bool canMove = false;
+
         void Awake()
         {
             instance = this;
@@ -208,6 +214,7 @@ namespace ZombieDriveGame
         /// </summary>
         void Start()
 		{
+            screenWidth = Screen.width;
             mobile = IsMobileCheck.CheckMobile();
            
             //if (LevelManager.instance.levelNumber != 1) tutorial = false;
@@ -372,7 +379,7 @@ namespace ZombieDriveGame
         }
 
         void Update()
-		{
+        {
             //frameText.text = Application.targetFrameRate.ToString();
             deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
             float fps = 1.0f / deltaTime;
@@ -463,7 +470,7 @@ namespace ZombieDriveGame
                 }
             }*/
 
-            if(!mobile)
+            if (!mobile)
             {
                 if (Input.GetAxisRaw("Horizontal") != 0)
                 {
@@ -482,6 +489,65 @@ namespace ZombieDriveGame
             }
             if (left) TurnLeft();
             if (right) TurnRight();
+
+            //MovePlayer();
+            //HandleTouchInput();
+        }
+
+        private void MovePlayer()
+        {
+            if(playerObject)
+                playerObject.transform.Translate(Vector3.forward * playerObject.speed * Time.deltaTime);
+        }
+
+        private void HandleTouchInput()
+        {
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                switch (touch.phase)
+                {
+                    case TouchPhase.Began:
+                        touchStartPos = touch.position;
+                        canMove = true;
+                        break;
+
+                    case TouchPhase.Moved:
+                        if (canMove)
+                        {
+                            touchEndPos = touch.position;
+                            Vector2 swipeDelta = touchEndPos - touchStartPos;
+
+                            float normalizedDeltaX = swipeDelta.x / screenWidth;
+                            float moveAmount = normalizedDeltaX * playerObject.speed;
+
+                            // Asegurarse de que los valores son finitos
+                            if (float.IsFinite(moveAmount))
+                            {
+                                //playerObject.transform.Translate(Vector3.right * moveAmount * Time.deltaTime);
+                                turn = true;
+                                if (moveAmount > 0)
+                                    TurnRight();
+                                else if (moveAmount < 0) TurnLeft();
+                                Debug.Log(moveAmount);
+                            }
+                            else
+                            {
+                                
+                                Debug.LogError("moveAmount no es finito: " + moveAmount);
+                            }
+
+                            touchStartPos = touch.position;
+                        }
+                        break;
+
+                    case TouchPhase.Ended:
+                        turn = false;
+                        canMove = false;
+                        break;
+                }
+            }
         }
 
         void LateUpdate()
